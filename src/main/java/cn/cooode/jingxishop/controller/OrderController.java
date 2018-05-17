@@ -1,8 +1,10 @@
 package cn.cooode.jingxishop.controller;
 
+import cn.cooode.jingxishop.entity.Inventory;
 import cn.cooode.jingxishop.entity.Order;
 import cn.cooode.jingxishop.entity.Product;
 import cn.cooode.jingxishop.entity.PurchaseItem;
+import cn.cooode.jingxishop.repository.InventoryRepository;
 import cn.cooode.jingxishop.repository.OrderRepository;
 import cn.cooode.jingxishop.repository.ProductRepository;
 import cn.cooode.jingxishop.vo.PurchaseItemVo;
@@ -23,6 +25,8 @@ public class OrderController {
     OrderRepository orderRepository;
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    InventoryRepository inventoryRepository;
 
     @PostMapping("")
     public ResponseEntity create(@RequestBody List<PurchaseItemVo> purchaseItemList) {
@@ -45,6 +49,11 @@ public class OrderController {
             totalPrice += purchasePrice;
 
             item.setPurchasePrice(purchasePrice);
+
+            //锁定库存
+            Inventory inventory = product.getInventory();
+            inventory.setLockedCount(inventory.getLockedCount() + vo.getPurchaseCount());
+            inventoryRepository.save(inventory);
         }
         order.setCreateTime(new Date());
         order.setTotalPrice(totalPrice);
@@ -61,6 +70,14 @@ public class OrderController {
         order.setStatus(orderStatus);
         if (Order.STATUS_WITHDRAWN.equals(orderStatus)) {
             order.setWithdrawnTime(new Date());
+            //撤销订单后，更新库存
+            List<PurchaseItem> purchaseItems = orderRepository.getById(id).getPurchaseItemList();
+            for (PurchaseItem item : purchaseItems) {
+                Inventory inventory = inventoryRepository.getOne(item.getProductId());
+                inventory.setLockedCount(inventory.getLockedCount() - item.getPurchaseCount());
+
+                inventoryRepository.save(inventory);
+            }
         } else if (order.STATUS_PAID.equals(orderStatus)) {
             order.setPaidTime(new Date());
         } else {
