@@ -2,6 +2,7 @@ package cn.cooode.jingxishop.controller;
 
 import cn.cooode.jingxishop.entity.Inventory;
 import cn.cooode.jingxishop.entity.Product;
+import cn.cooode.jingxishop.repository.InventoryRepository;
 import cn.cooode.jingxishop.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +18,17 @@ public class ProductController {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private InventoryRepository inventoryRepository;
 
     @PostMapping("")
     public ResponseEntity save(@RequestBody Product product) {
-        product.setInventory(new Inventory());
         product.setCreateTime(new Date());
         product = productRepository.save(product);
+
+        Inventory inventory = new Inventory();
+        inventory.setId(product.getId());
+        inventoryRepository.save(inventory);
         return ResponseEntity.status(201).location(URI.create("/products/"+product.getId())).build();
     }
 

@@ -8,9 +8,9 @@ public class PurchaseItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "productId")
-    private Product product;
+    private Long productId;
+    private String productName;
+    private String productDescription;
     private Integer purchasePrice;
     private Integer purchaseCount;
 
@@ -20,14 +20,6 @@ public class PurchaseItem {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public Integer getPurchasePrice() {
@@ -44,5 +36,29 @@ public class PurchaseItem {
 
     public void setPurchaseCount(Integer purchaseCount) {
         this.purchaseCount = purchaseCount;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getProductDescription() {
+        return productDescription;
+    }
+
+    public void setProductDescription(String productDescription) {
+        this.productDescription = productDescription;
     }
 }

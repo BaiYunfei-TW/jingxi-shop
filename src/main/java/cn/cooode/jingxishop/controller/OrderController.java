@@ -27,8 +27,9 @@ public class OrderController {
     @PostMapping("")
     public ResponseEntity create(@RequestBody List<PurchaseItemVo> purchaseItemList) {
         Order order = new Order();
-        List<PurchaseItem> itemList = new ArrayList<>(purchaseItemList.size());
-        int totalPrice = 0;
+        List<PurchaseItem> itemList = new ArrayList<>(purchaseItemList.size()); //订单项目的列表
+
+        int totalPrice = 0; //订单总价
         for (PurchaseItemVo vo :
                 purchaseItemList) {
             PurchaseItem item = new PurchaseItem();
@@ -36,7 +37,9 @@ public class OrderController {
 
             Product product = productRepository.getById(vo.getProductId());
             item.setPurchaseCount(vo.getPurchaseCount());
-            item.setProduct(product);
+            item.setProductId(product.getId());
+            item.setProductDescription(product.getDescription());
+            item.setProductName(product.getName());
 
             int purchasePrice = vo.getPurchaseCount() * product.getPrice();
             totalPrice += purchasePrice;
@@ -45,12 +48,37 @@ public class OrderController {
         }
         order.setCreateTime(new Date());
         order.setTotalPrice(totalPrice);
-        return ResponseEntity.status(201).location(URI.create("")).build();
+        order.setPurchaseItemList(itemList);
+
+        order = orderRepository.save(order);
+        return ResponseEntity.status(201).location(URI.create("/orders/"+order.getId())).build();
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity update(@PathVariable Long id, String orderStatus) {
+        Order order = orderRepository.getById(id);
+        order.setStatus(orderStatus);
+        if (Order.STATUS_WITHDRAWN.equals(orderStatus)) {
+            order.setWithdrawnTime(new Date());
+        } else if (order.STATUS_PAID.equals(orderStatus)) {
+            order.setPaidTime(new Date());
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+
+        orderRepository.save(order);
+        return ResponseEntity.status(204).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity get(@PathVariable Long id) {
+    public ResponseEntity get(@PathVariable Long id, Long userId) {
         return ResponseEntity.ok(orderRepository.getById(id));
+    }
+
+    @GetMapping("")
+    public ResponseEntity getAll(@RequestParam(required = true) Long userId) {
+        return ResponseEntity.ok(orderRepository.findAllByUserId(userId));
     }
 
 }

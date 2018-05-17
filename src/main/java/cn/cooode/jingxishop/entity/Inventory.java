@@ -12,7 +12,6 @@ import javax.persistence.Id;
 public class Inventory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer count;
     private Integer lockedCount;

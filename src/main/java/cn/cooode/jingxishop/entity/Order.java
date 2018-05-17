@@ -7,17 +7,24 @@ import java.util.List;
 @Entity
 @Table(name = "orders")
 public class Order {
+
+    public static final String STATUS_FINISHED = "finished";
+    public static final String STATUS_PAID = "paid";
+    public static final String STATUS_WITHDRAWN = "withdrawn";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long userId;
     private Integer totalPrice;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "orderId")
     private List<PurchaseItem> purchaseItemList;
     private Date createTime;
     private Date finishTime;
+    private Date withdrawnTime;
     private Date paidTime;
+    private String status;
 
     public Long getId() {
         return id;
@@ -73,5 +80,21 @@ public class Order {
 
     public void setPurchaseItemList(List<PurchaseItem> purchaseItemList) {
         this.purchaseItemList = purchaseItemList;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getWithdrawnTime() {
+        return withdrawnTime;
+    }
+
+    public void setWithdrawnTime(Date withdrawnTime) {
+        this.withdrawnTime = withdrawnTime;
     }
 }

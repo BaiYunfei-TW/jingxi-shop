@@ -12,7 +12,6 @@ public class Product {
     private String name;
     private String description;
     private Integer price;
-
     private Date createTime;
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
