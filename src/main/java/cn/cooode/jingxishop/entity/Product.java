@@ -18,6 +18,14 @@ public class Product {
     @PrimaryKeyJoinColumn
     private Inventory inventory;
 
+    public Product(Long productId) {
+        this.id = productId;
+    }
+
+    public Product() {
+
+    }
+
     public Long getId() {
         return id;
     }
