@@ -5,13 +5,13 @@
     {
       "enabled": true,
       "key": "IP",
-      "value": "10.205.20.80  #将该地址修改为自己的本机公网IP",
+      "value": "10.34.38.69",
       "type": "text"
     },
     {
       "enabled": true,
       "key": "port",
-      "value": "8083",
+      "value": "8080",
       "type": "text"
     }
   ],

@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "dmallQuiz copy",
-		"_postman_id": "a288f296-76cc-10a9-d910-f1152df16e73",
+		"_postman_id": "79d99ebd-e4c6-7254-20c6-21f117bf0d3b",
 		"description": "京西商城API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -110,7 +110,10 @@
 						"url": "http://{{IP}}:{{port}}/products/1",
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"description": "### API功能：\n- 根据商品id查找商品\n\n### 输入：空\n### 输出：\n```\n{\n    body:{\n        \"id\": 1,\n    \t\"name\": \"test666\",\n    \t\"description\": \"test\",\n    \t\"price\": 1000,\n    \t\"inventory\": {\n        \t\"id\": 1,\n        \t\"count\": 113,\n        \t\"lockedCount\": 107\n    \t}\n\t},\n    \"status\":200\n}\n```"
 					},
 					"response": []
@@ -145,7 +148,10 @@
 						"url": "http://{{IP}}:{{port}}/products",
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"description": "### API功能：\n- 查找所有商品信息\n\n### 输入：空\n### 输出：\n```\n{\n    body:\n    [\n\t    {\n\t        \"id\": 1,\n\t        \"name\": \"test666\",\n\t        \"description\": \"test\",\n\t        \"price\": 1000,\n\t        \"inventory\": {\n\t            \"id\": 1,\n\t            \"count\": 113,\n\t            \"lockedCount\": 107\n\t        }\n\t    },\n\t    {\n\t        \"id\": 2,\n\t        \"name\": \"方便面\",\n\t        \"description\": \"康师傅\",\n\t        \"price\": 5,\n\t        \"inventory\": {\n\t            \"id\": 2,\n\t            \"count\": 100,\n\t            \"lockedCount\": 86\n\t        }\n\t    },\n\t    {\n\t        \"id\": 3,\n\t        \"name\": \"农夫山泉\",\n\t        \"description\": \"矿泉水\",\n\t        \"price\": 3,\n\t        \"inventory\": {\n\t            \"id\": 3,\n\t            \"count\": 100,\n\t            \"lockedCount\": 85\n\t        }\n\t    }\n\t],\n    \"status\":200\n}\n```"
 					},
 					"response": []
@@ -180,7 +186,7 @@
 						"url": {
 							"raw": "http://{{IP}}:{{port}}/products?name=方便面",
 							"protocol": "http",
-							"IP": [
+							"host": [
 								"{{IP}}"
 							],
 							"port": "{{port}}",
@@ -234,7 +240,7 @@
 						"url": {
 							"raw": "http://{{IP}}:{{port}}/products?name=方便面&description=师",
 							"protocol": "http",
-							"IP": [
+							"host": [
 								"{{IP}}"
 							],
 							"port": "{{port}}",
@@ -319,7 +325,7 @@
 						"url": {
 							"raw": "http://{{IP}}:{{port}}/orders/1?orderStatus=paid",
 							"protocol": "http",
-							"IP": [
+							"host": [
 								"{{IP}}"
 							],
 							"port": "{{port}}",
@@ -364,7 +370,7 @@
 						"url": {
 							"raw": "http://{{IP}}:{{port}}/orders/5?orderStatus=withdrawn",
 							"protocol": "http",
-							"IP": [
+							"host": [
 								"{{IP}}"
 							],
 							"port": "{{port}}",
@@ -464,7 +470,7 @@
 						"url": {
 							"raw": "http://{{IP}}:{{port}}/orders?userId=1",
 							"protocol": "http",
-							"IP": [
+							"host": [
 								"{{IP}}"
 							],
 							"port": "{{port}}",
@@ -557,7 +563,7 @@
 						"url": {
 							"raw": "http://{{IP}}:{{port}}/logisticsRecords/1/orders/1?logisticsStatus=shipping",
 							"protocol": "http",
-							"IP": [
+							"host": [
 								"{{IP}}"
 							],
 							"port": "{{port}}",
@@ -604,7 +610,7 @@
 						"url": {
 							"raw": "http://{{IP}}:{{port}}/logisticsRecords/1/orders/1?logisticsStatus=signed",
 							"protocol": "http",
-							"IP": [
+							"host": [
 								"{{IP}}"
 							],
 							"port": "{{port}}",
