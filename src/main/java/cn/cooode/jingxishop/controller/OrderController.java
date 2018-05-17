@@ -36,6 +36,12 @@ public class OrderController {
         int totalPrice = 0; //订单总价
         for (PurchaseItemVo vo :
                 purchaseItemList) {
+            //判断库存
+            Inventory inventory = inventoryRepository.getOne(vo.getProductId());
+            if (inventory.getCount() - inventory.getLockedCount() < vo.getPurchaseCount()) {
+                return ResponseEntity.status(4011).build();
+            }
+
             PurchaseItem item = new PurchaseItem();
             itemList.add(item);
 
@@ -51,13 +57,13 @@ public class OrderController {
             item.setPurchasePrice(purchasePrice);
 
             //锁定库存
-            Inventory inventory = product.getInventory();
             inventory.setLockedCount(inventory.getLockedCount() + vo.getPurchaseCount());
             inventoryRepository.save(inventory);
         }
         order.setCreateTime(new Date());
         order.setTotalPrice(totalPrice);
         order.setPurchaseItemList(itemList);
+        order.setStatus(Order.STATUS_UNPAID);
 
         order = orderRepository.save(order);
         return ResponseEntity.status(201).location(URI.create("/orders/"+order.getId())).build();
@@ -73,6 +79,7 @@ public class OrderController {
             //撤销订单后，更新库存
             List<PurchaseItem> purchaseItems = orderRepository.getById(id).getPurchaseItemList();
             for (PurchaseItem item : purchaseItems) {
+                //判断库存
                 Inventory inventory = inventoryRepository.getOne(item.getProductId());
                 inventory.setLockedCount(inventory.getLockedCount() - item.getPurchaseCount());
 

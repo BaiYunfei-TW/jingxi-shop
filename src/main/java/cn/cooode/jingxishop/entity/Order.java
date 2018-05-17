@@ -11,6 +11,7 @@ public class Order {
     public static final String STATUS_FINISHED = "finished";
     public static final String STATUS_PAID = "paid";
     public static final String STATUS_WITHDRAWN = "withdrawn";
+    public static final String STATUS_UNPAID = "unPaid";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
