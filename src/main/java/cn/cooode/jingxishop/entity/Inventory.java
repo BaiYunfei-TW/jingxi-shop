@@ -1,14 +1,12 @@
 package cn.cooode.jingxishop.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * 库存 实体类
  */
 @Entity
+@Table(name = "inventory")
 public class Inventory {
 
     @Id
