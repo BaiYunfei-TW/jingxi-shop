@@ -1,10 +1,15 @@
 package cn.cooode.jingxishop.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "logistics_record")
+@ApiModel
 public class LogisticsRecord {
 
     public static final String STATUS_SHIPPING = "shipping";
@@ -12,10 +17,15 @@ public class LogisticsRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty("自增主键")
     private Long id;
+    @ApiModelProperty("配送员")
     private String deliveryMan;
+    @ApiModelProperty("出库时间")
     private Date outboundTime;
+    @ApiModelProperty("签收时间")
     private Date signedTime;
+    @ApiModelProperty(value = "配送状态", allowableValues = "shipping,signed", allowEmptyValue = true)
     private String logisticsStatus;
 
     public Long getId() {

@@ -1,21 +1,31 @@
 package cn.cooode.jingxishop.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "product")
+@ApiModel
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty("商品id，自增主键")
     private Long id;
+    @ApiModelProperty("商品名称")
     private String name;
+    @ApiModelProperty("商品描述")
     private String description;
+    @ApiModelProperty("单价")
     private Integer price;
+    @ApiModelProperty("创建时间")
     private Date createTime;
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
+    @ApiModelProperty("库存信息")
     private Inventory inventory;
 
     public Product(Long productId) {

@@ -7,13 +7,16 @@ import cn.cooode.jingxishop.entity.PurchaseItem;
 import cn.cooode.jingxishop.repository.InventoryRepository;
 import cn.cooode.jingxishop.repository.LogisticsRecordRepository;
 import cn.cooode.jingxishop.repository.OrderRepository;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
 
+@Api(description = "管理订单的配送记录")
 @RestController
 @RequestMapping("/logisticsRecords")
 public class LogisticsController {
@@ -25,13 +28,24 @@ public class LogisticsController {
     @Autowired
     InventoryRepository inventoryRepository;
 
+    @ApiOperation("根据物流订单Id查看物流详情")
     @GetMapping("/{id}")
-    public ResponseEntity get(@PathVariable Long id) {
+    public ResponseEntity<LogisticsRecord> get(@ApiParam("配送记录的id") @PathVariable Long id) {
         return ResponseEntity.ok(recordRepository.getById(id));
     }
 
+    @ApiOperation("根据物流订单Id更新物流状态")
     @PutMapping("/{id}/orders/{orderId}")
-    public ResponseEntity update(@PathVariable(name = "id") Long id, @PathVariable(name = "orderId") Long orderId, @RequestParam(required = true) String logisticsStatus) {
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(name = "id", value = "物流订单的id", required = true),
+            @ApiImplicitParam(name = "orderId", value = "商品订单的id", required = true),
+            @ApiImplicitParam(name = "logisticsStatus", value = "物流订单的状态", required = true, allowableValues = "shipping,signed")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "更新成功")
+    })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<LogisticsRecord> update(@PathVariable(name = "id") Long id, @PathVariable(name = "orderId") Long orderId, @RequestParam(required = true) String logisticsStatus) {
         LogisticsRecord logisticsRecord = recordRepository.getById(id);
         logisticsRecord.setLogisticsStatus(logisticsStatus);
 
@@ -51,7 +65,7 @@ public class LogisticsController {
         }
 
         recordRepository.save(logisticsRecord);
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.noContent().build();
     }
 
 }

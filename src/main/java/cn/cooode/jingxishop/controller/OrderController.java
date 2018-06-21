@@ -8,7 +8,9 @@ import cn.cooode.jingxishop.repository.InventoryRepository;
 import cn.cooode.jingxishop.repository.OrderRepository;
 import cn.cooode.jingxishop.repository.ProductRepository;
 import cn.cooode.jingxishop.vo.PurchaseItemVo;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Api(description = "管理订单信息")
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -28,7 +31,12 @@ public class OrderController {
     @Autowired
     InventoryRepository inventoryRepository;
 
+    @ApiOperation(value = "创建订单")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "创建成功")
+    })
     @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity create(@RequestBody List<PurchaseItemVo> purchaseItemList) {
         Order order = new Order();
         List<PurchaseItem> itemList = new ArrayList<>(purchaseItemList.size()); //订单项目的列表
@@ -66,12 +74,20 @@ public class OrderController {
         order.setStatus(Order.STATUS_UNPAID);
 
         order = orderRepository.save(order);
-        return ResponseEntity.status(201).location(URI.create("/orders/"+order.getId())).build();
+        return ResponseEntity.created(URI.create("/orders/"+order.getId())).build();
     }
 
-
+    @ApiOperation(value = "更新订单状态")
     @PutMapping("/{id}")
-    public ResponseEntity update(@PathVariable Long id, String orderStatus) {
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "更新成功")
+    })
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(name = "id", value = "订单id", required = true),
+            @ApiImplicitParam(name = "orderStatus", value = "订单状态", required = true, allowableValues = "unPaid,paid,finished,withdrawn")
+    })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity update(Long id, String orderStatus) {
         Order order = orderRepository.getById(id);
         order.setStatus(orderStatus);
         if (Order.STATUS_WITHDRAWN.equals(orderStatus)) {
@@ -92,16 +108,18 @@ public class OrderController {
         }
 
         orderRepository.save(order);
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.noContent().build();
     }
 
+    @ApiOperation(value = "查看订单详情")
     @GetMapping("/{id}")
-    public ResponseEntity get(@PathVariable Long id, Long userId) {
+    public ResponseEntity<Order> get(@ApiParam(value = "订单id", required = true) @PathVariable Long id, @ApiParam("用户id") Long userId) {
         return ResponseEntity.ok(orderRepository.getById(id));
     }
 
+    @ApiOperation(value = "查看user id对应的用户的所有订单信息")
     @GetMapping("")
-    public ResponseEntity getAll(@RequestParam(required = true) Long userId) {
+    public ResponseEntity<List<Order>> getAll(@ApiParam(value = "用户id", required = true) @RequestParam(required = false, defaultValue = "") Long userId) {
         return ResponseEntity.ok(orderRepository.findAllByUserId(userId));
     }
 

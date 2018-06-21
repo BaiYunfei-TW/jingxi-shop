@@ -1,8 +1,14 @@
 package cn.cooode.jingxishop.vo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel
 public class PurchaseItemVo {
 
+    @ApiModelProperty("商品id")
     private Long productId;
+    @ApiModelProperty("购买数量")
     private Integer purchaseCount;
 
     public Long getProductId() {
