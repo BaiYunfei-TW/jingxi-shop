@@ -25,7 +25,7 @@ public class Order {
     private Long userId;
     @ApiModelProperty("订单总额")
     private Integer totalPrice;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "orderId")
     @ApiModelProperty("购买的商品列表")
     private List<PurchaseItem> purchaseItemList;

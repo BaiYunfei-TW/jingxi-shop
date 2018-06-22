@@ -45,7 +45,7 @@ public class OrderController {
         for (PurchaseItemVo vo :
                 purchaseItemList) {
             //判断库存
-            Inventory inventory = inventoryRepository.getOne(vo.getProductId());
+            Inventory inventory = inventoryRepository.getById(vo.getProductId());
             if (inventory.getCount() - inventory.getLockedCount() < vo.getPurchaseCount()) {
                 return ResponseEntity.status(4011).build();
             }
@@ -113,7 +113,7 @@ public class OrderController {
 
     @ApiOperation(value = "查看订单详情")
     @GetMapping("/{id}")
-    public ResponseEntity<Order> get(@ApiParam(value = "订单id", required = true) @PathVariable Long id, @ApiParam("用户id") Long userId) {
+    public ResponseEntity<Order> get(@ApiParam(value = "订单id", required = true) @PathVariable Long id) {
         return ResponseEntity.ok(orderRepository.getById(id));
     }
 
